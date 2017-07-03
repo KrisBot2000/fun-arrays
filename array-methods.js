@@ -5,7 +5,12 @@ var dataset = require('./dataset.json');
   greater than 100000
   assign the resulting new array to `hundredThousandairs`
 */
-var hundredThousandairs = null;
+
+var hundredThousandairs = dataset.bankBalances.filter(isRich);
+
+function isRich(account){
+  return account.amount>100000;
+}
 
 /*
   DO NOT MUTATE DATA.
@@ -24,7 +29,16 @@ var hundredThousandairs = null;
     }
   assign the resulting new array to `datasetWithRoundedDollar`
 */
-var datasetWithRoundedDollar = null;
+var datasetWithRoundedDollar = dataset.bankBalances.map(round);
+
+function round(account){
+  var rounded = Math.round(account.amount);
+  return {
+    "amount": account.amount,
+    "state": account.state,
+    "rounded": rounded
+  };
+}
 
 /*
   DO NOT MUTATE DATA.
@@ -49,10 +63,24 @@ var datasetWithRoundedDollar = null;
     }
   assign the resulting new array to `roundedDime`
 */
-var datasetWithRoundedDime = null;
+var datasetWithRoundedDime = dataset.bankBalances.map(roundAgain);
+
+function roundAgain(account){
+  var roundedDime = Math.round(account.amount*10)/10;
+  return {
+    "amount": account.amount,
+    "state": account.state,
+    "roundedDime": roundedDime
+  };
+}
 
 // set sumOfBankBalances to be the sum of all value held at `amount` for each bank object
-var sumOfBankBalances = null;
+var sumOfBankBalances = dataset.bankBalances.reduce(sum, 0);
+
+function sum(total, account){
+  return Math.round((total + parseFloat(account.amount))*100)/100;
+}
+console.log(sumOfBankBalances);
 
 /*
   from each of the following states:
@@ -66,6 +94,15 @@ var sumOfBankBalances = null;
   and then sum it all up into one value saved to `sumOfInterests`
  */
 var sumOfInterests = null;
+
+//THIS NEEDS MODIFICATION:
+// function states(account){
+//   if(account.state===WI || account.state===IL || account.state===WY || account.state===OH || account.state===GA || account.state===DE){
+//     return{
+
+//     };
+//   }
+// }
 
 /*
   aggregate the sum of bankBalance amounts
