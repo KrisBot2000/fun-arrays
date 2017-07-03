@@ -80,7 +80,6 @@ var sumOfBankBalances = dataset.bankBalances.reduce(sum, 0);
 function sum(total, account){
   return Math.round((total + parseFloat(account.amount))*100)/100;
 }
-console.log(sumOfBankBalances);
 
 /*
   from each of the following states:
@@ -93,16 +92,26 @@ console.log(sumOfBankBalances);
   take each `amount` and add 18.9% interest to it rounded to the nearest cent
   and then sum it all up into one value saved to `sumOfInterests`
  */
-var sumOfInterests = null;
+var sumOfInterests = dataset.bankBalances.filter(states).map(interest).reduce(getInterest, 0);
 
-//THIS NEEDS MODIFICATION:
-// function states(account){
-//   if(account.state===WI || account.state===IL || account.state===WY || account.state===OH || account.state===GA || account.state===DE){
-//     return{
 
-//     };
-//   }
-// }
+function states(account){
+  if(account.state==="WI" || account.state==="IL" || account.state==="WY" || account.state==="OH" || account.state==="GA" || account.state==="DE"){
+    return account;
+  }
+}
+
+function interest(account){
+  return {
+    "amount": account.amount,
+    "state": account.state,
+    "interest": (Math.round(((parseFloat(account.amount))*.189)*100))/100
+  };
+}
+
+function getInterest(total, account){
+  return Math.round((parseFloat(total + account.interest))*100)/100;
+}
 
 /*
   aggregate the sum of bankBalance amounts
