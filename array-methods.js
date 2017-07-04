@@ -1,5 +1,13 @@
 var dataset = require('./dataset.json');
+var bankAccounts = dataset.bankBalances.map(convert);
 
+
+function convert(account){
+  return {
+    "amount": parseFloat(account.amount),
+    "state": account.state,
+  };
+}
 /*
   create an array with accounts from bankBalances that are
   greater than 100000
@@ -32,11 +40,10 @@ function isRich(account){
 var datasetWithRoundedDollar = dataset.bankBalances.map(round);
 
 function round(account){
-  var rounded = Math.round(account.amount);
   return {
     "amount": account.amount,
     "state": account.state,
-    "rounded": rounded
+    "rounded": Math.round(account.amount)
   };
 }
 
@@ -66,11 +73,10 @@ function round(account){
 var datasetWithRoundedDime = dataset.bankBalances.map(roundAgain);
 
 function roundAgain(account){
-  var roundedDime = Math.round(account.amount*10)/10;
   return {
     "amount": account.amount,
     "state": account.state,
-    "roundedDime": roundedDime
+    "roundedDime": Math.round(account.amount*10)/10
   };
 }
 
@@ -89,7 +95,7 @@ function sum(total, account){
     Ohio
     Georgia
     Delaware
-  take each `amount` and add 18.9% interest to it rounded to the nearest cent
+  take each `amount` and calculate 18.9% interest rounded to the nearest cent
   and then sum it all up into one value saved to `sumOfInterests`
  */
 var sumOfInterests = dataset.bankBalances.filter(states).map(interest).reduce(getInterest, 0);
@@ -125,25 +131,50 @@ function getInterest(total, account){
     the value must be rounded to the nearest cent
 
   note: During your summation (
-    if at any point durig your calculation where the number looks like `2486552.9779399997`
+    if at any point during your calculation where the number looks like `2486552.9779399997`
     round this number to the nearest 10th of a cent before moving on.
   )
  */
-var stateSums = null;
+
+//USED NEW bankAccounts ARRAY STARTING HERE, DECLARED AT BEGINNING!
+var stateSums = bankAccounts.reduce(stateObj, {});
+
+
+function stateObj(obj, account){
+  if (obj.hasOwnProperty(account.state)){
+    console.log("if amount");
+    console.log(account.amount);
+    obj[account.state] += parseFloat(account.amount.toFixed(2));
+  }else{
+    console.log("else amount");
+    console.log(account.amount);
+    obj[account.state] = account.amount;
+  }
+  //console.log(bankAccounts);
+  console.log(obj);
+  return obj;
+}
+
+
+
+
+
+
+
+
 
 /*
-  from each of the following states:
+  Exclude the following states from your filter:
     Wisconsin
     Illinois
     Wyoming
     Ohio
     Georgia
     Delaware
-  take each `amount` and add 18.9% interest to it
-  only sum values greater than 50,000 and save it to `sumOfInterests`
+  Take each `amount` returned from the filter and add 18.9% interest to it. If the added amount is over 50,000, sum the `amounts` and save result to `sumOfHighInterests`.
 
   note: During your summation (
-    if at any point durig your calculation where the number looks like `2486552.9779399997`
+    If at any point during your calculation where the number looks like `2486552.9779399997`
     round this number to the nearest 10th of a cent before moving on.
   )
  */
