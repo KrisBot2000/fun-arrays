@@ -144,11 +144,11 @@ function stateObj(obj, account){
   if (obj.hasOwnProperty(account.state)){
     console.log("if amount");
     console.log(account.amount);
-    obj[account.state] += parseFloat(account.amount.toFixed(2));
+    obj[account.state] = parseFloat((obj[account.state] + account.amount).toFixed(2));
   }else{
     console.log("else amount");
     console.log(account.amount);
-    obj[account.state] = account.amount;
+    obj[account.state] = parseFloat(account.amount.toFixed(2));
   }
   //console.log(bankAccounts);
   console.log(obj);
